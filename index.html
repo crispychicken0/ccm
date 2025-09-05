@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة اعتراضات الخصم - Crispy Chicken</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --secondary-color: #f44336;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        body {
+            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border-left: 5px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        .stats-card.total {
+            border-left-color: var(--primary-color);
+        }
+        .stats-card.accepted {
+            border-left-color: var(--success-color);
+        }
+        .stats-card.rejected {
+            border-left-color: var(--danger-color);
+        }
+        .stats-card.pending {
+            border-left-color: var(--warning-color);
+        }
+        .stats-card h2 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        .stats-card h5 {
+            color: #666;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+        }
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
+        }
+        .table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .table thead th {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        .status-pending {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        .status-accepted {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .status-rejected {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .status-replied {
+            background-color: var(--info-color);
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        .analysis-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .analysis-card h5 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .analysis-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .analysis-item h6 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+        }
+        .analysis-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.2);
+        }
+        .progress-bar {
+            border-radius: 4px;
+        }
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+        .email-output {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .section-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+        .filter-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .export-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .export-options .btn {
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .loading-spinner .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+        .reason-tag {
+            display: inline-block;
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin: 2px;
+        }
+        .reason-tag.high-frequency {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        .reason-tag.medium-frequency {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        .trend-indicator {
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+        .trend-up {
+            color: var(--success-color);
+        }
+        .trend-down {
+            color: var(--danger-color);
+        }
+        .nav-tabs {
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+        .nav-tabs .nav-link {
+            color: var(--dark-color);
+            border: none;
+            border-bottom: 3px solid transparent;
+            border-radius: 10px 10px 0 0;
+            margin-right: 5px;
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link:hover {
+            border-color: transparent;
+            color: var(--primary-color);
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: white;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .report-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 5px solid var(--primary-color);
+        }
+        .report-card h5 {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .report-summary {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .report-summary h6 {
+            color: var(--dark-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .report-summary .row > div {
+            padding: 10px;
+            border-right: 1px solid #e9ecef;
+        }
+        .report-summary .row > div:last-child {
+            border-right: none;
+        }
+        .branch-performance {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .branch-performance h6 {
+            color: var(--dark-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .performance-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+        .performance-excellent {
+            background-color: var(--success-color);
+        }
+        .performance-good {
+            background-color: var(--info-color);
+        }
+        .performance-average {
+            background-color: var(--warning-color);
+        }
+        .performance-poor {
+            background-color: var(--danger-color);
+        }
+        @media (max-width: 768px) {
+            .stats-card h2 {
+                font-size: 2rem;
+            }
+            
+            .export-options {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-shield-exclamation"></i> نظام إدارة اعتراضات الخصم
+            </a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text">
+                    <i class="bi bi-building"></i> Crispy Chicken - UAE
+                </span>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container-fluid py-4">
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab">
+                    <i class="bi bi-speedometer2"></i> لوحة التحكم
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab">
+                    <i class="bi bi-graph-up"></i> تحليل المطاعم
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
+                    <i class="bi bi-file-earmark-text"></i> التقارير
+                </button>
+            </li>
+        </ul>
+        
+        <!-- Tab Content -->
+        <div class="tab-content" id="mainTabContent">
+            <!-- Dashboard Tab -->
+            <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+                <!-- Summary Cards -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                        <div class="card stats-card total h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title">إجمالي الاعتراضات</h5>
+                                        <h2 class="text-primary" id="totalDisputes">0</h2>
+                                        <small class="text-muted">
+                                            <span class="trend-indicator trend-up">
+                                                <i class="bi bi-arrow-up"></i> 12% هذا الشهر
+                                            </span>
+                                        </small>
+                                    </div>
+                                    <div class="text-primary">
+                                        <i class="bi bi-file-earmark-text fs-1 opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                        <div class="card stats-card accepted h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title">الاعتراضات المقبولة</h5>
+                                        <h2 class="text-success" id="acceptedDisputes">0</h2>
+                                        <small class="text-muted">
+                                            <span class="trend-indicator trend-up">
+                                                <i class="bi bi-arrow-up"></i> 8% هذا الشهر
+                                            </span>
+                                        </small>
+                                    </div>
+                                    <div class="text-success">
+                                        <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                        <div class="card stats-card rejected h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title">الاعتراضات المرفوضة</h5>
+                                        <h2 class="text-danger" id="rejectedDisputes">0</h2>
+                                        <small class="text-muted">
+                                            <span class="trend-indicator trend-down">
+                                                <i class="bi bi-arrow-down"></i> 5% هذا الشهر
+                                            </span>
+                                        </small>
+                                    </div>
+                                    <div class="text-danger">
+                                        <i class="bi bi-x-circle fs-1 opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                        <div class="card stats-card pending h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title">قيد المراجعة</h5>
+                                        <h2 class="text-warning" id="pendingDisputes">0</h2>
+                                        <small class="text-muted">
+                                            <span class="trend-indicator trend-up">
+                                                <i class="bi bi-arrow-up"></i> 3% هذا الشهر
+                                            </span>
+                                        </small>
+                                    </div>
+                                    <div class="text-warning">
+                                        <i class="bi bi-clock-history fs-1 opacity-50"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analysis Section -->
+                <div class="row mb-4">
+                    <div class="col-xl-8 mb-3">
+                        <div class="card analysis-card">
+                            <div class="card-body">
+                                <h5><i class="bi bi-graph-up"></i> تحليل الأسباب الرئيسية</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="analysis-item">
+                                            <h6>السبب الأكثر شيوعاً</h6>
+                                            <p id="topReason">تحميل...</p>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="analysis-item">
+                                            <h6>متوسط قيمة الاعتراض</h6>
+                                            <p id="avgAmount">تحميل...</p>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="analysis-item">
+                                            <h6>نسبة النجاح</h6>
+                                            <p id="successRate">تحميل...</p>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="analysis-item">
+                                            <h6>متوسط وقت الرد</h6>
+                                            <p id="avgResponseTime">تحميل...</p>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-primary" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="section-title"><i class="bi bi-tags"></i> الأسباب الشائعة</h5>
+                                <div id="reasonTags">
+                                    <!-- سيتم تحميله ديناميكياً -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Row -->
+                <div class="row mb-4">
+                    <div class="col-xl-6 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-pie-chart"></i> توزيع الاعتراضات حسب المنطقة
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="areaChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-bar-chart"></i> الاعتراضات حسب الحالة
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="statusChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filter Section -->
+                <div class="filter-section">
+                    <h5 class="section-title"><i class="bi bi-funnel"></i> فلترة البيانات</h5>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">الحالة</label>
+                            <select class="form-select" id="statusFilter">
+                                <option value="">جميع الحالات</option>
+                                <option value="Pending">قيد المراجعة</option>
+                                <option value="Accepted">مقبول</option>
+                                <option value="Rejected">مرفوض</option>
+                                <option value="Replied">تم الرد</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">المنطقة</label>
+                            <select class="form-select" id="areaFilter">
+                                <option value="">جميع المناطق</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">من تاريخ</label>
+                            <input type="date" class="form-control" id="dateFrom">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">إلى تاريخ</label>
+                            <input type="date" class="form-control" id="dateTo">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button class="btn btn-primary" onclick="applyFilters()">
+                                <i class="bi bi-search"></i> تطبيق الفلترة
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="resetFilters()">
+                                <i class="bi bi-arrow-clockwise"></i> إعادة تعيين
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- Add Dispute Form -->
+                    <div class="col-xl-5 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-plus-circle"></i> إضافة اعتراض جديد
+                            </div>
+                            <div class="card-body">
+                                <form id="disputeForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">رقم الطلب <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="orderId" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">معرف الفرع <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="branchId" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">اسم الفرع <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="branchName" required>
+                                                <option value="">اختر الفرع</option>
+                                                <option value="Crispy Chicken Khalidiya">Crispy Chicken Khalidiya</option>
+                                                <option value="Crispy Chicken Muroor">Crispy Chicken Muroor</option>
+                                                <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
+                                                <option value="Crispy Chicken Al Barsha">Crispy Chicken Al Barsha</option>
+                                                <option value="Crispy Chicken Al Satwa">Crispy Chicken Al Satwa</option>
+                                                <option value="Crispy Chicken Electra">Crispy Chicken Electra</option>
+                                                <option value="Crispy Chicken Hamdan">Crispy Chicken Hamdan</option>
+                                                <option value="Crispy Chicken-Al Khalidiya">Crispy Chicken-Al Khalidiya</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">المنطقة <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="area" required>
+                                                <option value="">اختر المنطقة</option>
+                                                <option value="Al Danah">Al Danah</option>
+                                                <option value="Al Barsha 1">Al Barsha 1</option>
+                                                <option value="Al Markaziyah">Al Markaziyah</option>
+                                                <option value="Al Rawdah">Al Rawdah</option>
+                                                <option value="Al Satwa">Al Satwa</option>
+                                                <option value="Mohammed Bin Zayed City">Mohammed Bin Zayed City</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">المنصة <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="platform" required>
+                                                <option value="">اختر المنصة</option>
+                                                <option value="Careem">Careem</option>
+                                                <option value="Noon">Noon</option>
+                                                <option value="Deliviro">Deliviro</option>
+                                                <option value="Smile">Smile</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">رقم واتساب الفرع</label>
+                                            <input type="text" class="form-control" id="branchWhatsapp" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">إجمالي السلة (درهم) <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" id="basketAmount" step="0.01" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">المبلغ المخصوم (درهم) <span class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" id="deductedAmount" step="0.01" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">سبب الاعتراض <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="disputeReason" rows="3" required 
+                                            placeholder="اشرح سبب الاعتراض بالتفصيل..."></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">الأدلة</label>
+                                        <input type="file" class="form-control" id="evidence" multiple accept="image/*,video/*">
+                                        <small class="text-muted">يمكنك رفع صور أو فيديوهات كدليل</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">ملاحظات إضافية</label>
+                                        <textarea class="form-control" id="additionalNotes" rows="2" 
+                                            placeholder="أي ملاحظات إضافية..."></textarea>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="bi bi-plus-circle"></i> إضافة الاعتراض
+                                        </button>
+                                    </div>
+                                </form>
+                                <div id="emailOutput" class="email-output"></div>
+                                
+                                <div id="successMessage" class="success-message">
+                                    <i class="bi bi-check-circle-fill"></i> تم نسخ البريد الإلكتروني إلى الحافظة بنجاح!
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button id="copyButton" class="btn btn-outline-primary" style="display: none;" onclick="copyEmail()">
+                                        <i class="bi bi-clipboard"></i> نسخ البريد الإلكتروني
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Disputes Table -->
+                    <div class="col-xl-7 mb-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="bi bi-table"></i> قائمة الاعتراضات</span>
+                                <div class="export-options">
+                                    <button class="btn btn-outline-success btn-sm" onclick="exportToExcel()">
+                                        <i class="bi bi-file-earmark-excel"></i> Excel
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="exportToPDF()">
+                                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="exportToCSV()">
+                                        <i class="bi bi-file-earmark-text"></i> CSV
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="disputesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>رقم الطلب</th>
+                                                <th>الفرع</th>
+                                                <th>المنطقة</th>
+                                                <th>المنصة</th>
+                                                <th>المبلغ</th>
+                                                <th>الحالة</th>
+                                                <th>التاريخ</th>
+                                                <th>الإجراءات</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Disputes will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                    <div id="emptyState" class="text-center py-5 text-muted">
+                                        <i class="bi bi-inbox fs-1"></i>
+                                        <p class="mt-2">لا توجد اعتراضات مسجلة</p>
+                                    </div>
+                                    <div class="loading-spinner">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">جاري التحميل...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Restaurant Analysis Tab -->
+            <div class="tab-pane fade" id="analysis" role="tabpanel">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="bi bi-building"></i> تحليل أداء الفروع</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="branchAnalysisTable">
+                                        <thead>
+                                            <tr>
+                                                <th>الفرع</th>
+                                                <th>إجمالي الاعتراضات</th>
+                                                <th>مقبول</th>
+                                                <th>مرفوض</th>
+                                                <th>قيد المراجعة</th>
+                                                <th>نسبة النجاح</th>
+                                                <th>إجمالي المبالغ</th>
+                                                <th>متوسط وقت الرد</th>
+                                                <th>تقييم الأداء</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Data will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="chart-container mt-4">
+                                    <canvas id="branchChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-xl-6 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-pie-chart"></i> توزيع الاعتراضات حسب الفرع
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="branchPieChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 mb-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="bi bi-bar-chart"></i> أداء الفروع حسب النجاح
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="branchPerformanceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="bi bi-list-ul"></i> تفاصيل أداء الفروع</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="branchDetails">
+                                    <!-- Branch details will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports Tab -->
+            <div class="tab-pane fade" id="reports" role="tabpanel">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5><i class="bi bi-file-earmark-text"></i> إنشاء تقرير</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="reportForm">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">نوع التقرير</label>
+                                            <select class="form-select" id="reportType" required>
+                                                <option value="daily">يومي</option>
+                                                <option value="weekly">أسبوعي</option>
+                                                <option value="monthly">شهري</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">من تاريخ</label>
+                                            <input type="date" class="form-control" id="reportDateFrom" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="form-label">إلى تاريخ</label>
+                                            <input type="date" class="form-control" id="reportDateTo" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="bi bi-file-earmark-bar-graph"></i> إنشاء التقرير
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" id="reportCard" style="display: none;">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span id="reportTitle">تقرير</span>
+                                <div>
+                                    <button class="btn btn-outline-success btn-sm" onclick="exportReport('excel')">
+                                        <i class="bi bi-file-earmark-excel"></i> Excel
+                                    </button>
+                                    <button class="btn btn-outline-danger btn-sm" onclick="exportReport('pdf')">
+                                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" onclick="exportReport('csv')">
+                                        <i class="bi bi-file-earmark-text"></i> CSV
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="reportContent">
+                                    <!-- Report will be generated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-xl-4 mb-3">
+                        <div class="card report-card">
+                            <div class="card-body">
+                                <h5><i class="bi bi-calendar-day"></i> آخر تقرير يومي</h5>
+                                <div id="dailyReport">
+                                    <!-- Daily report summary -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 mb-3">
+                        <div class="card report-card">
+                            <div class="card-body">
+                                <h5><i class="bi bi-calendar-week"></i> آخر تقرير أسبوعي</h5>
+                                <div id="weeklyReport">
+                                    <!-- Weekly report summary -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 mb-3">
+                        <div class="card report-card">
+                            <div class="card-body">
+                                <h5><i class="bi bi-calendar-month"></i> آخر تقرير شهري</h5>
+                                <div id="monthlyReport">
+                                    <!-- Monthly report summary -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Dispute Modal -->
+    <div class="modal fade" id="viewDisputeModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تفاصيل الاعتراض</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="disputeDetails">
+                    <!-- Details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-primary" onclick="generateEmailFromModal()">
+                        <i class="bi bi-envelope"></i> إنشاء بريد إلكتروني
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Update Status Modal -->
+    <div class="modal fade" id="updateStatusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">تحديث حالة الاعتراض</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateStatusForm">
+                        <div class="mb-3">
+                            <label class="form-label">الحالة الجديدة</label>
+                            <select class="form-select" id="newStatus" required>
+                                <option value="Pending">قيد المراجعة</option>
+                                <option value="Accepted">مقبول</option>
+                                <option value="Rejected">مرفوض</option>
+                                <option value="Replied">تم الرد</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">ملاحظات الرد</label>
+                            <textarea class="form-control" id="replyNotes" rows="3" 
+                                placeholder="أدخل ملاحظات الرد من المنصة..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">تاريخ الرد</label>
+                            <input type="datetime-local" class="form-control" id="replyDate" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="updateDisputeStatus()">
+                        <i class="bi bi-check-circle"></i> تحديث
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let disputes = JSON.parse(localStorage.getItem('disputes')) || [];
+        let dataTable;
+        let areaChart, statusChart, branchChart, branchPieChart, branchPerformanceChart;
+        let currentDisputeIndex = -1;
+        let filteredDisputes = [...disputes];
+        
+        // Branch WhatsApp numbers
+        const branchWhats = { 
+            "Crispy Chicken Khalidiya": "971569494764", 
+            "Crispy Chicken Muroor": "971505414641", 
+            "Crispy Chicken Shabiya 11": "971562690688", 
+            "Crispy Chicken Al Barsha": "971569659524", 
+            "Crispy Chicken Al Satwa": "971567970685", 
+            "Crispy Chicken Electra": "971563866859", 
+            "Crispy Chicken Hamdan": "971556886650", 
+            "Crispy Chicken-Al Khalidiya": "971569494764" 
+        };
+        
+        // Platforms
+        const platforms = ["Careem", "Noon", "Deliviro", "Smile"];
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default dates
+            const today = new Date();
+            const lastMonth = new Date(today);
+            lastMonth.setMonth(lastMonth.getMonth() - 1);
+            
+            document.getElementById('dateFrom').value = lastMonth.toISOString().split('T')[0];
+            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
+            
+            // Set current date for reply
+            document.getElementById('replyDate').value = new Date().toISOString().slice(0, 16);
+            
+            // Set default dates for reports
+            document.getElementById('reportDateFrom').value = lastMonth.toISOString().split('T')[0];
+            document.getElementById('reportDateTo').value = today.toISOString().split('T')[0];
+            
+            // Add branch name change listener
+            document.getElementById('branchName').addEventListener('change', function() {
+                const selectedBranch = this.value;
+                document.getElementById('branchWhatsapp').value = selectedBranch ? branchWhats[selectedBranch] : '';
+            });
+            
+            // Load and display data
+            updateDashboard();
+            loadDisputesTable();
+            initializeCharts();
+            updateAnalysis();
+            populateFilters();
+            
+            // Load last reports
+            loadLastReports();
+            
+            // Add event listeners for tabs
+            document.getElementById('analysis-tab').addEventListener('shown.bs.tab', function () {
+                loadBranchAnalysis();
+            });
+            
+            document.getElementById('reports-tab').addEventListener('shown.bs.tab', function () {
+                loadLastReports();
+            });
+        });
+        
+        // Format date and time
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return '';
+            const date = new Date(dateTimeString);
+            const options = { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            };
+            return date.toLocaleDateString('ar-EG', options);
+        }
+        
+        // Add new dispute
+        document.getElementById('disputeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const dispute = {
+                orderId: document.getElementById('orderId').value,
+                branchId: document.getElementById('branchId').value,
+                branchName: document.getElementById('branchName').value,
+                branchWhatsapp: document.getElementById('branchWhatsapp').value,
+                area: document.getElementById('area').value,
+                platform: document.getElementById('platform').value,
+                basketAmount: parseFloat(document.getElementById('basketAmount').value),
+                deductedAmount: parseFloat(document.getElementById('deductedAmount').value),
+                disputeReason: document.getElementById('disputeReason').value,
+                evidence: document.getElementById('evidence').files.length > 0 ? 
+                    Array.from(document.getElementById('evidence').files).map(f => f.name).join(', ') : '',
+                additionalNotes: document.getElementById('additionalNotes').value,
+                status: 'Pending',
+                submissionDate: new Date().toISOString(),
+                careemReplyDate: '',
+                careemReplyNotes: '',
+                daysSinceReply: 0
+            };
+            
+            // Validate form
+            if (!dispute.orderId || !dispute.branchId || !dispute.branchName || 
+                !dispute.area || !dispute.platform || !dispute.basketAmount || !dispute.deductedAmount || 
+                !dispute.disputeReason) {
+                showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+            
+            // Add to disputes array
+            disputes.push(dispute);
+            
+            // Save to localStorage
+            localStorage.setItem('disputes', JSON.stringify(disputes));
+            
+            // Update UI
+            updateDashboard();
+            loadDisputesTable();
+            updateCharts();
+            updateAnalysis();
+            
+            // Generate email
+            generateEmail(dispute);
+            
+            // Reset form
+            document.getElementById('disputeForm').reset();
+            document.getElementById('branchWhatsapp').value = '';
+            
+            // Show success message
+            showToast('تم إضافة الاعتراض بنجاح', 'success');
+        });
+        
+        // Generate email
+        function generateEmail(dispute = null) {
+            if (!dispute) {
+                // Get form values if not passed
+                dispute = {
+                    orderId: document.getElementById('orderId').value,
+                    branchId: document.getElementById('branchId').value,
+                    branchName: document.getElementById('branchName').value,
+                    branchWhatsapp: document.getElementById('branchWhatsapp').value,
+                    area: document.getElementById('area').value,
+                    platform: document.getElementById('platform').value,
+                    basketAmount: document.getElementById('basketAmount').value,
+                    deductedAmount: document.getElementById('deductedAmount').value,
+                    disputeReason: document.getElementById('disputeReason').value,
+                    evidence: document.getElementById('evidence').files.length > 0 ? 
+                        Array.from(document.getElementById('evidence').files).map(f => f.name).join(', ') : '',
+                    additionalNotes: document.getElementById('additionalNotes').value
+                };
+            }
+            
+            const email = `Subject: Dispute of Unjustified Deduction – Order ${dispute.orderId} - ${dispute.platform}
+Dear ${dispute.platform} Partnership Team,
+We are raising a dispute regarding the deduction applied to the following order:
+Order ID: ${dispute.orderId}
+Branch: ${dispute.branchName} / ${dispute.area}
+Branch WhatsApp: ${dispute.branchWhatsapp}
+Platform: ${dispute.platform}
+Order Date: ${dispute.submissionDate ? formatDateTime(dispute.submissionDate) : 'N/A'}
+Deducted Amount: AED ${dispute.deductedAmount}
+Basket Amount: AED ${dispute.basketAmount}
+According to our internal records and customer confirmations, this order was delivered in full with no missing or damaged items. Therefore, the deduction applied is unjustified and must be reversed.
+Dispute Reason:
+${dispute.disputeReason}
+${dispute.additionalNotes ? `Additional Notes:
+${dispute.additionalNotes}` : ''}
+${dispute.evidence ? `Evidence: ${dispute.evidence}` : ''}
+We kindly request:
+• Immediate reimbursement of the deducted amount to our restaurant account.
+• Review of ${dispute.platform}'s refund process to ensure restaurant confirmation before applying such deductions in the future.
+We look forward to your urgent resolution of this matter.
+Sincerely,
+[Your Full Name]
+[Your Position]
+Crispy Chicken - UAE`;
+            
+            // Display email
+            document.getElementById('emailOutput').textContent = email;
+            document.getElementById('emailOutput').style.display = 'block';
+            document.getElementById('copyButton').style.display = 'inline-block';
+            
+            // Scroll to email
+            document.getElementById('emailOutput').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Generate email from modal
+        function generateEmailFromModal() {
+            if (currentDisputeIndex >= 0) {
+                generateEmail(disputes[currentDisputeIndex]);
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('viewDisputeModal'));
+                modal.hide();
+            }
+        }
+        
+        // Copy email to clipboard
+        function copyEmail() {
+            const emailText = document.getElementById('emailOutput').textContent;
+            
+            navigator.clipboard.writeText(emailText).then(function() {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                
+                setTimeout(function() {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }).catch(function(err) {
+                showToast('فشل نسخ البريد الإلكتروني. يرجى نسخه يدويًا.', 'error');
+            });
+        }
+        
+        // Update dashboard statistics
+        function updateDashboard() {
+            const totalDisputes = disputes.length;
+            const acceptedDisputes = disputes.filter(d => d.status === 'Accepted').length;
+            const rejectedDisputes = disputes.filter(d => d.status === 'Rejected').length;
+            const pendingDisputes = disputes.filter(d => d.status === 'Pending').length;
+            
+            document.getElementById('totalDisputes').textContent = totalDisputes;
+            document.getElementById('acceptedDisputes').textContent = acceptedDisputes;
+            document.getElementById('rejectedDisputes').textContent = rejectedDisputes;
+            document.getElementById('pendingDisputes').textContent = pendingDisputes;
+        }
+        
+        // Update analysis section
+        function updateAnalysis() {
+            if (disputes.length === 0) return;
+            
+            // Top reason analysis
+            const reasonCounts = {};
+            disputes.forEach(d => {
+                const reason = d.disputeReason.substring(0, 50) + '...'; // Truncate for display
+                reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
+            });
+            
+            const topReason = Object.keys(reasonCounts).reduce((a, b) => 
+                reasonCounts[a] > reasonCounts[b] ? a : b, Object.keys(reasonCounts)[0]);
+            
+            const topReasonCount = reasonCounts[topReason] || 0;
+            const topReasonPercentage = (topReasonCount / disputes.length * 100).toFixed(1);
+            
+            document.getElementById('topReason').textContent = `${topReason} (${topReasonCount} حالة)`;
+            document.querySelector('#topReason').nextElementSibling.querySelector('.progress-bar').style.width = `${topReasonPercentage}%`;
+            
+            // Average amount
+            const avgAmount = disputes.reduce((sum, d) => sum + d.deductedAmount, 0) / disputes.length;
+            document.getElementById('avgAmount').textContent = `${avgAmount.toFixed(2)} درهم`;
+            document.querySelector('#avgAmount').nextElementSibling.querySelector('.progress-bar').style.width = `${Math.min(avgAmount / 50 * 100, 100)}%`;
+            
+            // Success rate
+            const successRate = (acceptedDisputes / (acceptedDisputes + rejectedDisputes) * 100).toFixed(1);
+            document.getElementById('successRate').textContent = `${successRate}%`;
+            document.querySelector('#successRate').nextElementSibling.querySelector('.progress-bar').style.width = `${successRate}%`;
+            
+            // Average response time
+            const repliedDisputes = disputes.filter(d => d.careemReplyDate);
+            const avgResponseTime = repliedDisputes.length > 0 ? 
+                repliedDisputes.reduce((sum, d) => {
+                    const days = Math.floor((new Date(d.careemReplyDate) - new Date(d.submissionDate)) / (1000 * 60 * 60 * 24));
+                    return sum + days;
+                }, 0) / repliedDisputes.length : 0;
+            
+            document.getElementById('avgResponseTime').textContent = `${avgResponseTime.toFixed(1)} أيام`;
+            document.querySelector('#avgResponseTime').nextElementSibling.querySelector('.progress-bar').style.width = `${Math.min(avgResponseTime / 7 * 100, 100)}%`;
+            
+            // Update reason tags
+            updateReasonTags();
+        }
+        
+        // Update reason tags
+        function updateReasonTags() {
+            const reasonTagsContainer = document.getElementById('reasonTags');
+            reasonTagsContainer.innerHTML = '';
+            
+            const reasonCounts = {};
+            disputes.forEach(d => {
+                const reason = d.disputeReason.substring(0, 30) + '...';
+                reasonCounts[reason] = (reasonCounts[reason] || 0) + 1;
+            });
+            
+            Object.entries(reasonCounts).forEach(([reason, count]) => {
+                const percentage = (count / disputes.length * 100).toFixed(1);
+                let tagClass = 'reason-tag';
+                
+                if (percentage > 30) tagClass += ' high-frequency';
+                else if (percentage > 15) tagClass += ' medium-frequency';
+                
+                const tag = document.createElement('span');
+                tag.className = tagClass;
+                tag.textContent = `${reason} (${count})`;
+                tag.title = `${percentage}% من إجمالي الاعتراضات`;
+                
+                reasonTagsContainer.appendChild(tag);
+            });
+        }
+        
+        // Load disputes table
+        function loadDisputesTable() {
+            const tbody = document.querySelector('#disputesTable tbody');
+            const emptyState = document.getElementById('emptyState');
+            const loadingSpinner = document.querySelector('.loading-spinner');
+            
+            // Show loading
+            loadingSpinner.style.display = 'block';
+            emptyState.style.display = 'none';
+            
+            setTimeout(() => {
+                tbody.innerHTML = '';
+                
+                if (filteredDisputes.length === 0) {
+                    emptyState.style.display = 'block';
+                    loadingSpinner.style.display = 'none';
+                    return;
+                }
+                
+                filteredDisputes.forEach((dispute, index) => {
+                    const actualIndex = disputes.indexOf(dispute);
+                    const row = tbody.insertRow();
+                    
+                    // Status badge class
+                    let statusClass = 'status-pending';
+                    if (dispute.status === 'Accepted') statusClass = 'status-accepted';
+                    if (dispute.status === 'Rejected') statusClass = 'status-rejected';
+                    if (dispute.status === 'Replied') statusClass = 'status-replied';
+                    
+                    // Status text
+                    let statusText = 'قيد المراجعة';
+                    if (dispute.status === 'Accepted') statusText = 'مقبول';
+                    if (dispute.status === 'Rejected') statusText = 'مرفوض';
+                    if (dispute.status === 'Replied') statusText = 'تم الرد';
+                    
+                    row.innerHTML = `
+                        <td><strong>${dispute.orderId}</strong></td>
+                        <td>${dispute.branchName}</td>
+                        <td>${dispute.area}</td>
+                        <td>${dispute.platform}</td>
+                        <td>${dispute.deductedAmount} درهم</td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                        <td>${formatDateTime(dispute.submissionDate)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewDispute(${actualIndex})" title="عرض التفاصيل">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning" onclick="openUpdateStatusModal(${actualIndex})" title="تحديث الحالة">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteDispute(${actualIndex})" title="حذف">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                });
+                
+                // Initialize DataTable if not already initialized
+                if (!dataTable) {
+                    dataTable = $('#disputesTable').DataTable({
+                        pageLength: 10,
+                        language: {
+                            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/ar.json'
+                        },
+                        order: [[6, 'desc']] // Sort by date
+                    });
+                } else {
+                    dataTable.clear();
+                    dataTable.rows.add(filteredDisputes);
+                    dataTable.draw();
+                }
+                
+                loadingSpinner.style.display = 'none';
+            }, 500);
+        }
+        
+        // View dispute details
+        function viewDispute(index) {
+            currentDisputeIndex = index;
+            const dispute = disputes[index];
+            
+            const details = document.getElementById('disputeDetails');
+            details.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>رقم الطلب:</strong> ${dispute.orderId}</p>
+                        <p><strong>معرف الفرع:</strong> ${dispute.branchId}</p>
+                        <p><strong>اسم الفرع:</strong> ${dispute.branchName}</p>
+                        <p><strong>رقم واتساب الفرع:</strong> ${dispute.branchWhatsapp}</p>
+                        <p><strong>المنطقة:</strong> ${dispute.area}</p>
+                        <p><strong>المنصة:</strong> ${dispute.platform}</p>
+                        <p><strong>إجمالي السلة:</strong> ${dispute.basketAmount} درهم</p>
+                        <p><strong>المبلغ المخصوم:</strong> ${dispute.deductedAmount} درهم</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>الحالة:</strong> 
+                            <span class="badge ${dispute.status === 'Accepted' ? 'status-accepted' : 
+                                dispute.status === 'Rejected' ? 'status-rejected' : 
+                                dispute.status === 'Replied' ? 'status-replied' : 'status-pending'}">
+                                ${dispute.status === 'Accepted' ? 'مقبول' : 
+                                dispute.status === 'Rejected' ? 'مرفوض' : 
+                                dispute.status === 'Replied' ? 'تم الرد' : 'قيد المراجعة'}
+                            </span>
+                        </p>
+                        <p><strong>تاريخ التقديم:</strong> ${formatDateTime(dispute.submissionDate)}</p>
+                        <p><strong>تاريخ الرد:</strong> ${dispute.careemReplyDate ? formatDateTime(dispute.careemReplyDate) : 'لم يتم الرد بعد'}</p>
+                        <p><strong>الأيام منذ الرد:</strong> ${dispute.daysSinceReply || 'N/A'}</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <p><strong>سبب الاعتراض:</strong></p>
+                    <div class="alert alert-info">${dispute.disputeReason}</div>
+                </div>
+                ${dispute.evidence ? `
+                <div class="mt-3">
+                    <p><strong>الأدلة:</strong></p>
+                    <div class="alert alert-light">${dispute.evidence}</div>
+                </div>
+                ` : ''}
+                ${dispute.additionalNotes ? `
+                <div class="mt-3">
+                    <p><strong>ملاحظات إضافية:</strong></p>
+                    <div class="alert alert-secondary">${dispute.additionalNotes}</div>
+                </div>
+                ` : ''}
+                ${dispute.careemReplyNotes ? `
+                <div class="mt-3">
+                    <p><strong>ملاحظات الرد:</strong></p>
+                    <div class="alert alert-warning">${dispute.careemReplyNotes}</div>
+                </div>
+                ` : ''}
+            `;
+            
+            const modal = new bootstrap.Modal(document.getElementById('viewDisputeModal'));
+            modal.show();
+        }
+        
+        // Open update status modal
+        function openUpdateStatusModal(index) {
+            currentDisputeIndex = index;
+            const dispute = disputes[index];
+            
+            // Set current values
+            document.getElementById('newStatus').value = dispute.status;
+            document.getElementById('replyNotes').value = dispute.careemReplyNotes || '';
+            document.getElementById('replyDate').value = dispute.careemReplyDate ? 
+                new Date(dispute.careemReplyDate).toISOString().slice(0, 16) : 
+                new Date().toISOString().slice(0, 16);
+            
+            const modal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
+            modal.show();
+        }
+        
+        // Update dispute status
+        function updateDisputeStatus() {
+            if (currentDisputeIndex < 0) return;
+            
+            const newStatus = document.getElementById('newStatus').value;
+            const replyNotes = document.getElementById('replyNotes').value;
+            const replyDate = document.getElementById('replyDate').value;
+            
+            // Update dispute
+            disputes[currentDisputeIndex].status = newStatus;
+            disputes[currentDisputeIndex].careemReplyNotes = replyNotes;
+            disputes[currentDisputeIndex].careemReplyDate = replyDate;
+            
+            // Calculate days since reply
+            const submissionDate = new Date(disputes[currentDisputeIndex].submissionDate);
+            const replyDateTime = new Date(replyDate);
+            disputes[currentDisputeIndex].daysSinceReply = Math.floor((replyDateTime - submissionDate) / (1000 * 60 * 60 * 24));
+            
+            // Save to localStorage
+            localStorage.setItem('disputes', JSON.stringify(disputes));
+            
+            // Update UI
+            updateDashboard();
+            loadDisputesTable();
+            updateCharts();
+            updateAnalysis();
+            
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('updateStatusModal'));
+            modal.hide();
+            
+            showToast('تم تحديث حالة الاعتراض بنجاح', 'success');
+        }
+        
+        // Delete dispute
+        function deleteDispute(index) {
+            if (confirm('هل أنت متأكد من حذف هذا الاعتراض؟')) {
+                disputes.splice(index, 1);
+                localStorage.setItem('disputes', JSON.stringify(disputes));
+                
+                updateDashboard();
+                loadDisputesTable();
+                updateCharts();
+                updateAnalysis();
+                
+                showToast('تم حذف الاعتراض بنجاح', 'success');
+            }
+        }
+        
+        // Initialize charts
+        function initializeCharts() {
+            // Area chart
+            const areaCtx = document.getElementById('areaChart').getContext('2d');
+            areaChart = new Chart(areaCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                            '#FF9F40', '#8AC926', '#1982C4', '#6A4C93', '#F15BB5'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Status chart
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            statusChart = new Chart(statusCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['قيد المراجعة', 'مقبول', 'مرفوض', 'تم الرد'],
+                    datasets: [{
+                        label: 'عدد الاعتراضات',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: ['#ffc107', '#28a745', '#dc3545', '#17a2b8'],
+                        borderColor: ['#e0a800', '#1e7e34', '#c82333', '#138496'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Branch chart
+            const branchCtx = document.getElementById('branchChart').getContext('2d');
+            branchChart = new Chart(branchCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'إجمالي الاعتراضات',
+                            data: [],
+                            backgroundColor: 'rgba(211, 47, 47, 0.7)',
+                            borderColor: 'rgba(211, 47, 47, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'المقبولة',
+                            data: [],
+                            backgroundColor: 'rgba(76, 175, 80, 0.7)',
+                            borderColor: 'rgba(76, 175, 80, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'المرفوضة',
+                            data: [],
+                            backgroundColor: 'rgba(244, 67, 54, 0.7)',
+                            borderColor: 'rgba(244, 67, 54, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Branch pie chart
+            const branchPieCtx = document.getElementById('branchPieChart').getContext('2d');
+            branchPieChart = new Chart(branchPieCtx, {
+                type: 'pie',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                            '#FF9F40', '#8AC926', '#1982C4', '#6A4C93', '#F15BB5'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Branch performance chart
+            const branchPerformanceCtx = document.getElementById('branchPerformanceChart').getContext('2d');
+            branchPerformanceChart = new Chart(branchPerformanceCtx, {
+                type: 'horizontalBar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'نسبة النجاح (%)',
+                        data: [],
+                        backgroundColor: [],
+                        borderColor: [],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `نسبة النجاح: ${context.parsed.x}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            updateCharts();
+        }
+        
+        // Update charts
+        function updateCharts() {
+            // Update area chart
+            const areaCounts = {};
+            disputes.forEach(dispute => {
+                areaCounts[dispute.area] = (areaCounts[dispute.area] || 0) + 1;
+            });
+            areaChart.data.labels = Object.keys(areaCounts);
+            areaChart.data.datasets[0].data = Object.values(areaCounts);
+            areaChart.update();
+            
+            // Update status chart
+            const statusCounts = {
+                pending: disputes.filter(d => d.status === 'Pending').length,
+                accepted: disputes.filter(d => d.status === 'Accepted').length,
+                rejected: disputes.filter(d => d.status === 'Rejected').length,
+                replied: disputes.filter(d => d.status === 'Replied').length
+            };
+            statusChart.data.datasets[0].data = [
+                statusCounts.pending,
+                statusCounts.accepted,
+                statusCounts.rejected,
+                statusCounts.replied
+            ];
+            statusChart.update();
+        }
+        
+        // Load branch analysis
+        function loadBranchAnalysis() {
+            const branchData = {};
+            
+            // Initialize branch data
+            Object.keys(branchWhats).forEach(branch => {
+                branchData[branch] = {
+                    total: 0,
+                    accepted: 0,
+                    rejected: 0,
+                    pending: 0,
+                    totalAmount: 0,
+                    responseTimes: [] // to calculate average
+                };
+            });
+            
+            // Aggregate data
+            disputes.forEach(dispute => {
+                if (branchData[dispute.branchName]) {
+                    branchData[dispute.branchName].total++;
+                    branchData[dispute.branchName].totalAmount += dispute.deductedAmount;
+                    
+                    if (dispute.status === 'Accepted') {
+                        branchData[dispute.branchName].accepted++;
+                    } else if (dispute.status === 'Rejected') {
+                        branchData[dispute.branchName].rejected++;
+                    } else if (dispute.status === 'Pending') {
+                        branchData[dispute.branchName].pending++;
+                    }
+                    
+                    // If replied, add response time in days
+                    if (dispute.careemReplyDate) {
+                        const submissionDate = new Date(dispute.submissionDate);
+                        const replyDate = new Date(dispute.careemReplyDate);
+                        const days = Math.floor((replyDate - submissionDate) / (1000 * 60 * 60 * 24));
+                        branchData[dispute.branchName].responseTimes.push(days);
+                    }
+                }
+            });
+            
+            // Calculate success rate and average response time
+            Object.keys(branchData).forEach(branch => {
+                const data = branchData[branch];
+                data.successRate = data.accepted + data.rejected > 0 ? 
+                    (data.accepted / (data.accepted + data.rejected) * 100).toFixed(1) : 0;
+                data.avgResponseTime = data.responseTimes.length > 0 ? 
+                    (data.responseTimes.reduce((a, b) => a + b, 0) / data.responseTimes.length).toFixed(1) : 0;
+                
+                // Performance rating
+                if (data.successRate >= 80) {
+                    data.performance = 'ممتاز';
+                    data.performanceClass = 'performance-excellent';
+                } else if (data.successRate >= 60) {
+                    data.performance = 'جيد';
+                    data.performanceClass = 'performance-good';
+                } else if (data.successRate >= 40) {
+                    data.performance = 'متوسط';
+                    data.performanceClass = 'performance-average';
+                } else {
+                    data.performance = 'ضعيف';
+                    data.performanceClass = 'performance-poor';
+                }
+            });
+            
+            // Populate table
+            const tbody = document.querySelector('#branchAnalysisTable tbody');
+            tbody.innerHTML = '';
+            
+            Object.keys(branchData).forEach(branch => {
+                const data = branchData[branch];
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${branch}</td>
+                    <td>${data.total}</td>
+                    <td>${data.accepted}</td>
+                    <td>${data.rejected}</td>
+                    <td>${data.pending}</td>
+                    <td>${data.successRate}%</td>
+                    <td>${data.totalAmount.toFixed(2)} درهم</td>
+                    <td>${data.avgResponseTime} أيام</td>
+                    <td>
+                        ${data.performance}
+                        <span class="performance-indicator ${data.performanceClass}"></span>
+                    </td>
+                `;
+            });
+            
+            // Update branch chart
+            branchChart.data.labels = Object.keys(branchData);
+            branchChart.data.datasets[0].data = Object.values(branchData).map(d => d.total);
+            branchChart.data.datasets[1].data = Object.values(branchData).map(d => d.accepted);
+            branchChart.data.datasets[2].data = Object.values(branchData).map(d => d.rejected);
+            branchChart.update();
+            
+            // Update branch pie chart
+            branchPieChart.data.labels = Object.keys(branchData);
+            branchPieChart.data.datasets[0].data = Object.values(branchData).map(d => d.total);
+            branchPieChart.update();
+            
+            // Update branch performance chart
+            branchPerformanceChart.data.labels = Object.keys(branchData);
+            branchPerformanceChart.data.datasets[0].data = Object.values(branchData).map(d => parseFloat(d.successRate));
+            
+            // Set colors based on performance
+            branchPerformanceChart.data.datasets[0].backgroundColor = Object.values(branchData).map(d => {
+                if (d.successRate >= 80) return 'rgba(76, 175, 80, 0.7)';
+                if (d.successRate >= 60) return 'rgba(33, 150, 243, 0.7)';
+                if (d.successRate >= 40) return 'rgba(255, 152, 0, 0.7)';
+                return 'rgba(244, 67, 54, 0.7)';
+            });
+            
+            branchPerformanceChart.data.datasets[0].borderColor = Object.values(branchData).map(d => {
+                if (d.successRate >= 80) return 'rgba(76, 175, 80, 1)';
+                if (d.successRate >= 60) return 'rgba(33, 150, 243, 1)';
+                if (d.successRate >= 40) return 'rgba(255, 152, 0, 1)';
+                return 'rgba(244, 67, 54, 1)';
+            });
+            
+            branchPerformanceChart.update();
+            
+            // Update branch details
+            updateBranchDetails(branchData);
+        }
+        
+        // Update branch details
+        function updateBranchDetails(branchData) {
+            const branchDetailsContainer = document.getElementById('branchDetails');
+            branchDetailsContainer.innerHTML = '';
+            
+            Object.keys(branchData).forEach(branch => {
+                const data = branchData[branch];
+                const branchCard = document.createElement('div');
+                branchCard.className = 'branch-performance';
+                branchCard.innerHTML = `
+                    <h6>${branch}</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p><strong>إجمالي الاعتراضات:</strong> ${data.total}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>نسبة النجاح:</strong> ${data.successRate}%</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>إجمالي المبالغ:</strong> ${data.totalAmount.toFixed(2)} درهم</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>متوسط وقت الرد:</strong> ${data.avgResponseTime} أيام</p>
+                        </div>
+                    </div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar ${data.performanceClass.replace('performance-', 'bg-')}" 
+                             role="progressbar" style="width: ${data.successRate}%"></div>
+                    </div>
+                `;
+                branchDetailsContainer.appendChild(branchCard);
+            });
+        }
+        
+        // Generate report
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateReport();
+        });
+        
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const dateFrom = document.getElementById('reportDateFrom').value;
+            const dateTo = document.getElementById('reportDateTo').value;
+            
+            // Filter disputes for the report period
+            const reportDisputes = disputes.filter(dispute => {
+                const disputeDate = new Date(dispute.submissionDate).toISOString().split('T')[0];
+                return disputeDate >= dateFrom && disputeDate <= dateTo;
+            });
+            
+            // Generate report data
+            const reportData = {
+                type: reportType,
+                dateFrom: dateFrom,
+                dateTo: dateTo,
+                totalDisputes: reportDisputes.length,
+                statusBreakdown: {
+                    pending: reportDisputes.filter(d => d.status === 'Pending').length,
+                    accepted: reportDisputes.filter(d => d.status === 'Accepted').length,
+                    rejected: reportDisputes.filter(d => d.status === 'Rejected').length,
+                    replied: reportDisputes.filter(d => d.status === 'Replied').length
+                },
+                branchBreakdown: {},
+                platformBreakdown: {},
+                topReasons: {},
+                successRate: 0
+            };
+            
+            // Calculate branch breakdown
+            Object.keys(branchWhats).forEach(branch => {
+                reportData.branchBreakdown[branch] = reportDisputes.filter(d => d.branchName === branch).length;
+            });
+            
+            // Calculate platform breakdown
+            platforms.forEach(platform => {
+                reportData.platformBreakdown[platform] = reportDisputes.filter(d => d.platform === platform).length;
+            });
+            
+            // Calculate top reasons
+            reportDisputes.forEach(dispute => {
+                const reason = dispute.disputeReason.substring(0, 50) + '...';
+                reportData.topReasons[reason] = (reportData.topReasons[reason] || 0) + 1;
+            });
+            
+            // Sort top reasons
+            reportData.topReasons = Object.entries(reportData.topReasons)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5)
+                .reduce((obj, [reason, count]) => {
+                    obj[reason] = count;
+                    return obj;
+                }, {});
+            
+            // Calculate success rate
+            const totalDecided = reportData.statusBreakdown.accepted + reportData.statusBreakdown.rejected;
+            reportData.successRate = totalDecided > 0 ? 
+                (reportData.statusBreakdown.accepted / totalDecided * 100).toFixed(1) : 0;
+            
+            // Display report
+            displayReport(reportData);
+            
+            // Save report to localStorage
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            reports.push({
+                type: reportType,
+                dateFrom: dateFrom,
+                dateTo: dateTo,
+                generatedAt: new Date().toISOString(),
+                data: reportData
+            });
+            localStorage.setItem('reports', JSON.stringify(reports));
+        }
+        
+        function displayReport(reportData) {
+            const reportCard = document.getElementById('reportCard');
+            const reportTitle = document.getElementById('reportTitle');
+            const reportContent = document.getElementById('reportContent');
+            
+            // Set title
+            const typeText = reportData.type === 'daily' ? 'يومي' : 
+                             reportData.type === 'weekly' ? 'أسبوعي' : 'شهري';
+            reportTitle.textContent = `تقرير ${typeText} (${reportData.dateFrom} - ${reportData.dateTo})`;
+            
+            // Build report HTML
+            let html = `
+                <div class="report-summary">
+                    <h6>ملخص التقرير</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p><strong>إجمالي الاعتراضات:</strong> ${reportData.totalDisputes}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>نسبة النجاح:</strong> ${reportData.successRate}%</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>قيد المراجعة:</strong> ${reportData.statusBreakdown.pending}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p><strong>تم الرد:</strong> ${reportData.statusBreakdown.replied}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>توزيع الحالات</h6>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>الحالة</th>
+                                    <th>العدد</th>
+                                    <th>النسبة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>قيد المراجعة</td>
+                                    <td>${reportData.statusBreakdown.pending}</td>
+                                    <td>${(reportData.statusBreakdown.pending / reportData.totalDisputes * 100).toFixed(1)}%</td>
+                                </tr>
+                                <tr>
+                                    <td>مقبول</td>
+                                    <td>${reportData.statusBreakdown.accepted}</td>
+                                    <td>${(reportData.statusBreakdown.accepted / reportData.totalDisputes * 100).toFixed(1)}%</td>
+                                </tr>
+                                <tr>
+                                    <td>مرفوض</td>
+                                    <td>${reportData.statusBreakdown.rejected}</td>
+                                    <td>${(reportData.statusBreakdown.rejected / reportData.totalDisputes * 100).toFixed(1)}%</td>
+                                </tr>
+                                <tr>
+                                    <td>تم الرد</td>
+                                    <td>${reportData.statusBreakdown.replied}</td>
+                                    <td>${(reportData.statusBreakdown.replied / reportData.totalDisputes * 100).toFixed(1)}%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>الأسباب الأكثر شيوعاً</h6>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>السبب</th>
+                                    <th>العدد</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${Object.entries(reportData.topReasons).map(([reason, count]) => 
+                                    `<tr><td>${reason}</td><td>${count}</td></tr>`
+                                ).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h6>توزيع الفروع</h6>
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="reportBranchChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>توزيع المنصات</h6>
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="reportPlatformChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            reportContent.innerHTML = html;
+            reportCard.style.display = 'block';
+            
+            // Create charts
+            createReportCharts(reportData);
+        }
+        
+        function createReportCharts(reportData) {
+            // Branch chart
+            const branchCtx = document.getElementById('reportBranchChart').getContext('2d');
+            new Chart(branchCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(reportData.branchBreakdown),
+                    datasets: [{
+                        data: Object.values(reportData.branchBreakdown),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
+                            '#FF9F40', '#8AC926', '#1982C4', '#6A4C93', '#F15BB5'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+            
+            // Platform chart
+            const platformCtx = document.getElementById('reportPlatformChart').getContext('2d');
+            new Chart(platformCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(reportData.platformBreakdown),
+                    datasets: [{
+                        data: Object.values(reportData.platformBreakdown),
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+        
+        function exportReport(format) {
+            showToast(`تم تصدير التقرير بنجاح بصيغة ${format.toUpperCase()}`, 'success');
+        }
+        
+        // Load last reports
+        function loadLastReports() {
+            const reports = JSON.parse(localStorage.getItem('reports')) || [];
+            
+            // Filter reports by type
+            const dailyReports = reports.filter(r => r.type === 'daily').sort((a, b) => 
+                new Date(b.generatedAt) - new Date(a.generatedAt));
+            const weeklyReports = reports.filter(r => r.type === 'weekly').sort((a, b) => 
+                new Date(b.generatedAt) - new Date(a.generatedAt));
+            const monthlyReports = reports.filter(r => r.type === 'monthly').sort((a, b) => 
+                new Date(b.generatedAt) - new Date(a.generatedAt));
+            
+            // Display last reports
+            displayLastReport('dailyReport', dailyReports[0]);
+            displayLastReport('weeklyReport', weeklyReports[0]);
+            displayLastReport('monthlyReport', monthlyReports[0]);
+        }
+        
+        function displayLastReport(elementId, report) {
+            const element = document.getElementById(elementId);
+            
+            if (!report) {
+                element.innerHTML = '<p class="text-muted">لا توجد تقارير</p>';
+                return;
+            }
+            
+            const typeText = report.type === 'daily' ? 'يومي' : 
+                             report.type === 'weekly' ? 'أسبوعي' : 'شهري';
+            
+            element.innerHTML = `
+                <div class="report-summary">
+                    <h6>تقرير ${typeText} (${report.dateFrom} - ${report.dateTo})</h6>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>إجمالي الاعتراضات:</strong> ${report.data.totalDisputes}</p>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>نسبة النجاح:</strong> ${report.data.successRate}%</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>مقبول:</strong> ${report.data.statusBreakdown.accepted}</p>
+                        </div>
+                        <div class="col-6">
+                            <p><strong>مرفوض:</strong> ${report.data.statusBreakdown.rejected}</p>
+                        </div>
+                    </div>
+                    <small class="text-muted">تم إنشاؤه في: ${formatDateTime(report.generatedAt)}</small>
+                </div>
+            `;
+        }
+        
+        // Populate filters
+        function populateFilters() {
+            const areaFilter = document.getElementById('areaFilter');
+            const areas = [...new Set(disputes.map(d => d.area))];
+            
+            areas.forEach(area => {
+                const option = document.createElement('option');
+                option.value = area;
+                option.textContent = area;
+                areaFilter.appendChild(option);
+            });
+        }
+        
+        // Apply filters
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const areaFilter = document.getElementById('areaFilter').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            
+            filteredDisputes = disputes.filter(dispute => {
+                // Status filter
+                if (statusFilter && dispute.status !== statusFilter) return false;
+                
+                // Area filter
+                if (areaFilter && dispute.area !== areaFilter) return false;
+                
+                // Date filter
+                const disputeDate = new Date(dispute.submissionDate).toISOString().split('T')[0];
+                if (dateFrom && disputeDate < dateFrom) return false;
+                if (dateTo && disputeDate > dateTo) return false;
+                
+                return true;
+            });
+            
+            loadDisputesTable();
+            updateAnalysis();
+        }
+        
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('areaFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            
+            filteredDisputes = [...disputes];
+            loadDisputesTable();
+            updateAnalysis();
+        }
+        
+        // Export functions
+        function exportToExcel() {
+            exportData('excel');
+        }
+        
+        function exportToPDF() {
+            exportData('pdf');
+        }
+        
+        function exportToCSV() {
+            exportData('csv');
+        }
+        
+        function exportData(format) {
+            // Create CSV content
+            let csv = "Order ID,Branch ID,Branch Name,Branch WhatsApp,Area,Platform,Basket Amount,Deducted Amount,Dispute Reason,Evidence,Status,Submission Date,Careem Reply Date,Careem Reply Notes\n";
+            
+            filteredDisputes.forEach(dispute => {
+                csv += `"${dispute.orderId}","${dispute.branchId}","${dispute.branchName}","${dispute.branchWhatsapp}","${dispute.area}","${dispute.platform}",${dispute.basketAmount},${dispute.deductedAmount},"${dispute.disputeReason}","${dispute.evidence}","${dispute.status}","${dispute.submissionDate}","${dispute.careemReplyDate}","${dispute.careemReplyNotes}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', `disputes_export_${new Date().toISOString().split('T')[0]}.${format === 'excel' ? 'xlsx' : format}`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast(`تم تصدير البيانات بنجاح بصيغة ${format.toUpperCase()}`, 'success');
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toastContainer = document.createElement('div');
+            toastContainer.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+            `;
+            
+            const toastId = 'toast-' + Date.now();
+            const bgClass = type === 'success' ? 'bg-success' : type === 'error' ? 'bg-danger' : 'bg-primary';
+            
+            toastContainer.innerHTML = `
+                <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(toastContainer);
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { autohide: true, delay: 3000 });
+            toast.show();
+            
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                toastContainer.remove();
+            });
+        }
+    </script>
+</body>
+</html>
