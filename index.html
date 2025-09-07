@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة اعتراضات الخصم - Crispy Chicken</title>
+    <title>Crispy Chicken Dispute Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
@@ -57,12 +57,12 @@
             content: '';
             position: absolute;
             top: 0;
-            right: 0;
+            left: 0;
             width: 100px;
             height: 100px;
             background: rgba(255,255,255,0.1);
             border-radius: 50%;
-            transform: translate(30px, -30px);
+            transform: translate(-30px, -30px);
         }
         .stats-card.total {
             border-left-color: var(--primary-color);
@@ -234,7 +234,7 @@
             content: '';
             position: absolute;
             bottom: -2px;
-            left: 0;
+            right: 0;
             width: 50px;
             height: 2px;
             background: var(--secondary-color);
@@ -388,7 +388,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
-                <i class="bi bi-shield-exclamation"></i> نظام إدارة اعتراضات الخصم
+                <i class="bi bi-shield-exclamation"></i> Crispy Chicken Dispute Management
             </a>
             <div class="navbar-nav ms-auto">
                 <span class="navbar-text">
@@ -403,17 +403,17 @@
         <ul class="nav nav-tabs" id="mainTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab">
-                    <i class="bi bi-speedometer2"></i> لوحة التحكم
+                    <i class="bi bi-speedometer2"></i> Dashboard
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis" type="button" role="tab">
-                    <i class="bi bi-graph-up"></i> تحليل المطاعم
+                    <i class="bi bi-graph-up"></i> Restaurant Analysis
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
-                    <i class="bi bi-file-earmark-text"></i> التقارير
+                    <i class="bi bi-file-earmark-text"></i> Reports
                 </button>
             </li>
         </ul>
@@ -429,11 +429,11 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h5 class="card-title">إجمالي الاعتراضات</h5>
+                                        <h5 class="card-title">Total Disputes</h5>
                                         <h2 class="text-primary" id="totalDisputes">0</h2>
                                         <small class="text-muted">
                                             <span class="trend-indicator trend-up">
-                                                <i class="bi bi-arrow-up"></i> 12% هذا الشهر
+                                                <i class="bi bi-arrow-up"></i> 12% this month
                                             </span>
                                         </small>
                                     </div>
@@ -449,11 +449,11 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h5 class="card-title">الاعتراضات المقبولة</h5>
+                                        <h5 class="card-title">Accepted Disputes</h5>
                                         <h2 class="text-success" id="acceptedDisputes">0</h2>
                                         <small class="text-muted">
                                             <span class="trend-indicator trend-up">
-                                                <i class="bi bi-arrow-up"></i> 8% هذا الشهر
+                                                <i class="bi bi-arrow-up"></i> 8% this month
                                             </span>
                                         </small>
                                     </div>
@@ -469,11 +469,11 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h5 class="card-title">الاعتراضات المرفوضة</h5>
+                                        <h5 class="card-title">Rejected Disputes</h5>
                                         <h2 class="text-danger" id="rejectedDisputes">0</h2>
                                         <small class="text-muted">
                                             <span class="trend-indicator trend-down">
-                                                <i class="bi bi-arrow-down"></i> 5% هذا الشهر
+                                                <i class="bi bi-arrow-down"></i> 5% this month
                                             </span>
                                         </small>
                                     </div>
@@ -489,11 +489,11 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h5 class="card-title">قيد المراجعة</h5>
+                                        <h5 class="card-title">Under Review</h5>
                                         <h2 class="text-warning" id="pendingDisputes">0</h2>
                                         <small class="text-muted">
                                             <span class="trend-indicator trend-up">
-                                                <i class="bi bi-arrow-up"></i> 3% هذا الشهر
+                                                <i class="bi bi-arrow-up"></i> 3% this month
                                             </span>
                                         </small>
                                     </div>
@@ -511,12 +511,12 @@
                     <div class="col-xl-8 mb-3">
                         <div class="card analysis-card">
                             <div class="card-body">
-                                <h5><i class="bi bi-graph-up"></i> تحليل الأسباب الرئيسية</h5>
+                                <h5><i class="bi bi-graph-up"></i> Key Reasons Analysis</h5>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="analysis-item">
-                                            <h6>السبب الأكثر شيوعاً</h6>
-                                            <p id="topReason">تحميل...</p>
+                                            <h6>Most Common Reason</h6>
+                                            <p id="topReason">Loading...</p>
                                             <div class="progress">
                                                 <div class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
                                             </div>
@@ -524,8 +524,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="analysis-item">
-                                            <h6>متوسط قيمة الاعتراض</h6>
-                                            <p id="avgAmount">تحميل...</p>
+                                            <h6>Average Dispute Amount</h6>
+                                            <p id="avgAmount">Loading...</p>
                                             <div class="progress">
                                                 <div class="progress-bar bg-info" role="progressbar" style="width: 0%"></div>
                                             </div>
@@ -535,8 +535,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="analysis-item">
-                                            <h6>نسبة النجاح</h6>
-                                            <p id="successRate">تحميل...</p>
+                                            <h6>Success Rate</h6>
+                                            <p id="successRate">Loading...</p>
                                             <div class="progress">
                                                 <div class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
                                             </div>
@@ -544,8 +544,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="analysis-item">
-                                            <h6>متوسط وقت الرد</h6>
-                                            <p id="avgResponseTime">تحميل...</p>
+                                            <h6>Average Response Time</h6>
+                                            <p id="avgResponseTime">Loading...</p>
                                             <div class="progress">
                                                 <div class="progress-bar bg-primary" role="progressbar" style="width: 0%"></div>
                                             </div>
@@ -558,9 +558,9 @@
                     <div class="col-xl-4 mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="section-title"><i class="bi bi-tags"></i> الأسباب الشائعة</h5>
+                                <h5 class="section-title"><i class="bi bi-tags"></i> Common Reasons</h5>
                                 <div id="reasonTags">
-                                    <!-- سيتم تحميله ديناميكياً -->
+                                    <!-- Will be loaded dynamically -->
                                 </div>
                             </div>
                         </div>
@@ -572,7 +572,7 @@
                     <div class="col-xl-6 mb-3">
                         <div class="card">
                             <div class="card-header">
-                                <i class="bi bi-pie-chart"></i> توزيع الاعتراضات حسب المنطقة
+                                <i class="bi bi-pie-chart"></i> Disputes by Area
                             </div>
                             <div class="card-body">
                                 <div class="chart-container">
@@ -584,7 +584,7 @@
                     <div class="col-xl-6 mb-3">
                         <div class="card">
                             <div class="card-header">
-                                <i class="bi bi-bar-chart"></i> الاعتراضات حسب الحالة
+                                <i class="bi bi-bar-chart"></i> Disputes by Status
                             </div>
                             <div class="card-body">
                                 <div class="chart-container">
@@ -597,40 +597,40 @@
                 
                 <!-- Filter Section -->
                 <div class="filter-section">
-                    <h5 class="section-title"><i class="bi bi-funnel"></i> فلترة البيانات</h5>
+                    <h5 class="section-title"><i class="bi bi-funnel"></i> Filter Data</h5>
                     <div class="row">
                         <div class="col-md-3 mb-3">
-                            <label class="form-label">الحالة</label>
+                            <label class="form-label">Status</label>
                             <select class="form-select" id="statusFilter">
-                                <option value="">جميع الحالات</option>
-                                <option value="Pending">قيد المراجعة</option>
-                                <option value="Accepted">مقبول</option>
-                                <option value="Rejected">مرفوض</option>
-                                <option value="Replied">تم الرد</option>
+                                <option value="">All Statuses</option>
+                                <option value="Pending">Under Review</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Replied">Replied</option>
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label class="form-label">المنطقة</label>
+                            <label class="form-label">Area</label>
                             <select class="form-select" id="areaFilter">
-                                <option value="">جميع المناطق</option>
+                                <option value="">All Areas</option>
                             </select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label class="form-label">من تاريخ</label>
+                            <label class="form-label">From Date</label>
                             <input type="date" class="form-control" id="dateFrom">
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label class="form-label">إلى تاريخ</label>
+                            <label class="form-label">To Date</label>
                             <input type="date" class="form-control" id="dateTo">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
                             <button class="btn btn-primary" onclick="applyFilters()">
-                                <i class="bi bi-search"></i> تطبيق الفلترة
+                                <i class="bi bi-search"></i> Apply Filters
                             </button>
                             <button class="btn btn-outline-secondary" onclick="resetFilters()">
-                                <i class="bi bi-arrow-clockwise"></i> إعادة تعيين
+                                <i class="bi bi-arrow-clockwise"></i> Reset
                             </button>
                         </div>
                     </div>
@@ -641,25 +641,25 @@
                     <div class="col-xl-5 mb-4">
                         <div class="card">
                             <div class="card-header">
-                                <i class="bi bi-plus-circle"></i> إضافة اعتراض جديد
+                                <i class="bi bi-plus-circle"></i> Add New Dispute
                             </div>
                             <div class="card-body">
                                 <form id="disputeForm">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">رقم الطلب <span class="text-danger">*</span></label>
+                                            <label class="form-label">Order ID <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="orderId" required>
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">معرف الفرع <span class="text-danger">*</span></label>
+                                            <label class="form-label">Branch ID <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="branchId" required>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">اسم الفرع <span class="text-danger">*</span></label>
+                                            <label class="form-label">Branch Name <span class="text-danger">*</span></label>
                                             <select class="form-select" id="branchName" required>
-                                                <option value="">اختر الفرع</option>
+                                                <option value="">Select Branch</option>
                                                 <option value="Crispy Chicken Khalidiya">Crispy Chicken Khalidiya</option>
                                                 <option value="Crispy Chicken Muroor">Crispy Chicken Muroor</option>
                                                 <option value="Crispy Chicken Shabiya 11">Crispy Chicken Shabiya 11</option>
@@ -671,9 +671,9 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">المنطقة <span class="text-danger">*</span></label>
+                                            <label class="form-label">Area <span class="text-danger">*</span></label>
                                             <select class="form-select" id="area" required>
-                                                <option value="">اختر المنطقة</option>
+                                                <option value="">Select Area</option>
                                                 <option value="Al Danah">Al Danah</option>
                                                 <option value="Al Barsha 1">Al Barsha 1</option>
                                                 <option value="Al Markaziyah">Al Markaziyah</option>
@@ -685,9 +685,9 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">المنصة <span class="text-danger">*</span></label>
+                                            <label class="form-label">Platform <span class="text-danger">*</span></label>
                                             <select class="form-select" id="platform" required>
-                                                <option value="">اختر المنصة</option>
+                                                <option value="">Select Platform</option>
                                                 <option value="Careem">Careem</option>
                                                 <option value="Noon">Noon</option>
                                                 <option value="Deliviro">Deliviro</option>
@@ -695,49 +695,49 @@
                                             </select>
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">رقم واتساب الفرع</label>
+                                            <label class="form-label">Branch WhatsApp</label>
                                             <input type="text" class="form-control" id="branchWhatsapp" readonly>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">إجمالي السلة (درهم) <span class="text-danger">*</span></label>
+                                            <label class="form-label">Basket Total (AED) <span class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="basketAmount" step="0.01" required>
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-label">المبلغ المخصوم (درهم) <span class="text-danger">*</span></label>
+                                            <label class="form-label">Deducted Amount (AED) <span class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="deductedAmount" step="0.01" required>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">سبب الاعتراض <span class="text-danger">*</span></label>
+                                        <label class="form-label">Dispute Reason <span class="text-danger">*</span></label>
                                         <textarea class="form-control" id="disputeReason" rows="3" required 
-                                            placeholder="اشرح سبب الاعتراض بالتفصيل..."></textarea>
+                                            placeholder="Explain the dispute reason in detail..."></textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">الأدلة</label>
+                                        <label class="form-label">Evidence</label>
                                         <input type="file" class="form-control" id="evidence" multiple accept="image/*,video/*">
-                                        <small class="text-muted">يمكنك رفع صور أو فيديوهات كدليل</small>
+                                        <small class="text-muted">You can upload images or videos as evidence</small>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">ملاحظات إضافية</label>
+                                        <label class="form-label">Additional Notes</label>
                                         <textarea class="form-control" id="additionalNotes" rows="2" 
-                                            placeholder="أي ملاحظات إضافية..."></textarea>
+                                            placeholder="Any additional notes..."></textarea>
                                     </div>
                                     <div class="d-grid">
                                         <button type="submit" class="btn btn-primary btn-lg">
-                                            <i class="bi bi-plus-circle"></i> إضافة الاعتراض
+                                            <i class="bi bi-plus-circle"></i> Add Dispute
                                         </button>
                                     </div>
                                 </form>
                                 <div id="emailOutput" class="email-output"></div>
                                 
                                 <div id="successMessage" class="success-message">
-                                    <i class="bi bi-check-circle-fill"></i> تم نسخ البريد الإلكتروني إلى الحافظة بنجاح!
+                                    <i class="bi bi-check-circle-fill"></i> Email copied to clipboard successfully!
                                 </div>
                                 <div class="text-center mt-3">
                                     <button id="copyButton" class="btn btn-outline-primary" style="display: none;" onclick="copyEmail()">
-                                        <i class="bi bi-clipboard"></i> نسخ البريد الإلكتروني
+                                        <i class="bi bi-clipboard"></i> Copy Email
                                     </button>
                                 </div>
                             </div>
@@ -747,7 +747,7 @@
                     <div class="col-xl-7 mb-4">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <span><i class="bi bi-table"></i> قائمة الاعتراضات</span>
+                                <span><i class="bi bi-table"></i> Disputes List</span>
                                 <div class="export-options">
                                     <button class="btn btn-outline-success btn-sm" onclick="exportToExcel()">
                                         <i class="bi bi-file-earmark-excel"></i> Excel
@@ -765,14 +765,14 @@
                                     <table class="table table-hover" id="disputesTable">
                                         <thead>
                                             <tr>
-                                                <th>رقم الطلب</th>
-                                                <th>الفرع</th>
-                                                <th>المنطقة</th>
-                                                <th>المنصة</th>
-                                                <th>المبلغ</th>
-                                                <th>الحالة</th>
-                                                <th>التاريخ</th>
-                                                <th>الإجراءات</th>
+                                                <th>Order ID</th>
+                                                <th>Branch</th>
+                                                <th>Area</th>
+                                                <th>Platform</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -781,11 +781,11 @@
                                     </table>
                                     <div id="emptyState" class="text-center py-5 text-muted">
                                         <i class="bi bi-inbox fs-1"></i>
-                                        <p class="mt-2">لا توجد اعتراضات مسجلة</p>
+                                        <p class="mt-2">No disputes recorded</p>
                                     </div>
                                     <div class="loading-spinner">
                                         <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">جاري التحميل...</span>
+                                            <span class="visually-hidden">Loading...</span>
                                         </div>
                                     </div>
                                 </div>
@@ -801,22 +801,22 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5><i class="bi bi-building"></i> تحليل أداء الفروع</h5>
+                                <h5><i class="bi bi-building"></i> Branch Performance Analysis</h5>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table class="table table-hover" id="branchAnalysisTable">
                                         <thead>
                                             <tr>
-                                                <th>الفرع</th>
-                                                <th>إجمالي الاعتراضات</th>
-                                                <th>مقبول</th>
-                                                <th>مرفوض</th>
-                                                <th>قيد المراجعة</th>
-                                                <th>نسبة النجاح</th>
-                                                <th>إجمالي المبالغ</th>
-                                                <th>متوسط وقت الرد</th>
-                                                <th>تقييم الأداء</th>
+                                                <th>Branch</th>
+                                                <th>Total Disputes</th>
+                                                <th>Accepted</th>
+                                                <th>Rejected</th>
+                                                <th>Pending</th>
+                                                <th>Success Rate</th>
+                                                <th>Total Amount</th>
+                                                <th>Avg Response Time</th>
+                                                <th>Performance Rating</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -836,7 +836,7 @@
                     <div class="col-xl-6 mb-3">
                         <div class="card">
                             <div class="card-header">
-                                <i class="bi bi-pie-chart"></i> توزيع الاعتراضات حسب الفرع
+                                <i class="bi bi-pie-chart"></i> Disputes by Branch
                             </div>
                             <div class="card-body">
                                 <div class="chart-container">
@@ -848,7 +848,7 @@
                     <div class="col-xl-6 mb-3">
                         <div class="card">
                             <div class="card-header">
-                                <i class="bi bi-bar-chart"></i> أداء الفروع حسب النجاح
+                                <i class="bi bi-bar-chart"></i> Branch Success Performance
                             </div>
                             <div class="card-body">
                                 <div class="chart-container">
@@ -863,7 +863,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5><i class="bi bi-list-ul"></i> تفاصيل أداء الفروع</h5>
+                                <h5><i class="bi bi-list-ul"></i> Branch Performance Details</h5>
                             </div>
                             <div class="card-body">
                                 <div id="branchDetails">
@@ -881,32 +881,32 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5><i class="bi bi-file-earmark-text"></i> إنشاء تقرير</h5>
+                                <h5><i class="bi bi-file-earmark-text"></i> Generate Report</h5>
                             </div>
                             <div class="card-body">
                                 <form id="reportForm">
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
-                                            <label class="form-label">نوع التقرير</label>
+                                            <label class="form-label">Report Type</label>
                                             <select class="form-select" id="reportType" required>
-                                                <option value="daily">يومي</option>
-                                                <option value="weekly">أسبوعي</option>
-                                                <option value="monthly">شهري</option>
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4 mb-3">
-                                            <label class="form-label">من تاريخ</label>
+                                            <label class="form-label">From Date</label>
                                             <input type="date" class="form-control" id="reportDateFrom" required>
                                         </div>
                                         <div class="col-md-4 mb-3">
-                                            <label class="form-label">إلى تاريخ</label>
+                                            <label class="form-label">To Date</label>
                                             <input type="date" class="form-control" id="reportDateTo" required>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
                                             <button type="submit" class="btn btn-primary">
-                                                <i class="bi bi-file-earmark-bar-graph"></i> إنشاء التقرير
+                                                <i class="bi bi-file-earmark-bar-graph"></i> Generate Report
                                             </button>
                                         </div>
                                     </div>
@@ -920,7 +920,7 @@
                     <div class="col-12">
                         <div class="card" id="reportCard" style="display: none;">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <span id="reportTitle">تقرير</span>
+                                <span id="reportTitle">Report</span>
                                 <div>
                                     <button class="btn btn-outline-success btn-sm" onclick="exportReport('excel')">
                                         <i class="bi bi-file-earmark-excel"></i> Excel
@@ -946,7 +946,7 @@
                     <div class="col-xl-4 mb-3">
                         <div class="card report-card">
                             <div class="card-body">
-                                <h5><i class="bi bi-calendar-day"></i> آخر تقرير يومي</h5>
+                                <h5><i class="bi bi-calendar-day"></i> Latest Daily Report</h5>
                                 <div id="dailyReport">
                                     <!-- Daily report summary -->
                                 </div>
@@ -956,7 +956,7 @@
                     <div class="col-xl-4 mb-3">
                         <div class="card report-card">
                             <div class="card-body">
-                                <h5><i class="bi bi-calendar-week"></i> آخر تقرير أسبوعي</h5>
+                                <h5><i class="bi bi-calendar-week"></i> Latest Weekly Report</h5>
                                 <div id="weeklyReport">
                                     <!-- Weekly report summary -->
                                 </div>
@@ -966,7 +966,7 @@
                     <div class="col-xl-4 mb-3">
                         <div class="card report-card">
                             <div class="card-body">
-                                <h5><i class="bi bi-calendar-month"></i> آخر تقرير شهري</h5>
+                                <h5><i class="bi bi-calendar-month"></i> Latest Monthly Report</h5>
                                 <div id="monthlyReport">
                                     <!-- Monthly report summary -->
                                 </div>
@@ -983,16 +983,16 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تفاصيل الاعتراض</h5>
+                    <h5 class="modal-title">Dispute Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="disputeDetails">
                     <!-- Details will be loaded here -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" onclick="generateEmailFromModal()">
-                        <i class="bi bi-envelope"></i> إنشاء بريد إلكتروني
+                        <i class="bi bi-envelope"></i> Generate Email
                     </button>
                 </div>
             </div>
@@ -1004,35 +1004,35 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">تحديث حالة الاعتراض</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title">Update Dispute Status</h5>
+                    <button type="button"="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="updateStatusForm">
                         <div class="mb-3">
-                            <label class="form-label">الحالة الجديدة</label>
+                            <label class="form-label">New Status</label>
                             <select class="form-select" id="newStatus" required>
-                                <option value="Pending">قيد المراجعة</option>
-                                <option value="Accepted">مقبول</option>
-                                <option value="Rejected">مرفوض</option>
-                                <option value="Replied">تم الرد</option>
+                                <option value="Pending">Under Review</option>
+                                <option value="Accepted">Accepted</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Replied">Replied</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">ملاحظات الرد</label>
+                            <label class="form-label">Reply Notes</label>
                             <textarea class="form-control" id="replyNotes" rows="3" 
-                                placeholder="أدخل ملاحظات الرد من المنصة..."></textarea>
+                                placeholder="Enter reply notes from the platform..."></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">تاريخ الرد</label>
+                            <label class="form-label">Reply Date</label>
                             <input type="datetime-local" class="form-control" id="replyDate" required>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" onclick="updateDisputeStatus()">
-                        <i class="bi bi-check-circle"></i> تحديث
+                        <i class="bi bi-check-circle"></i> Update
                     </button>
                 </div>
             </div>
@@ -1117,7 +1117,7 @@
                 minute: '2-digit',
                 hour12: false 
             };
-            return date.toLocaleDateString('ar-EG', options);
+            return date.toLocaleDateString('en-US', options);
         }
         
         // Add new dispute
@@ -1140,8 +1140,8 @@
                 additionalNotes: document.getElementById('additionalNotes').value,
                 status: 'Pending',
                 submissionDate: new Date().toISOString(),
-                careemReplyDate: '',
-                careemReplyNotes: '',
+                platformReplyDate: '',
+                platformReplyNotes: '',
                 daysSinceReply: 0
             };
             
@@ -1149,7 +1149,7 @@
             if (!dispute.orderId || !dispute.branchId || !dispute.branchName || 
                 !dispute.area || !dispute.platform || !dispute.basketAmount || !dispute.deductedAmount || 
                 !dispute.disputeReason) {
-                showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
+                showToast('Please fill in all required fields', 'error');
                 return;
             }
             
@@ -1173,7 +1173,7 @@
             document.getElementById('branchWhatsapp').value = '';
             
             // Show success message
-            showToast('تم إضافة الاعتراض بنجاح', 'success');
+            showToast('Dispute added successfully', 'success');
         });
         
         // Generate email
@@ -1253,7 +1253,7 @@ Crispy Chicken - UAE`;
                     successMessage.style.display = 'none';
                 }, 3000);
             }).catch(function(err) {
-                showToast('فشل نسخ البريد الإلكتروني. يرجى نسخه يدويًا.', 'error');
+                showToast('Failed to copy email. Please copy it manually.', 'error');
             });
         }
         
@@ -1287,12 +1287,12 @@ Crispy Chicken - UAE`;
             const topReasonCount = reasonCounts[topReason] || 0;
             const topReasonPercentage = (topReasonCount / disputes.length * 100).toFixed(1);
             
-            document.getElementById('topReason').textContent = `${topReason} (${topReasonCount} حالة)`;
+            document.getElementById('topReason').textContent = `${topReason} (${topReasonCount} cases)`;
             document.querySelector('#topReason').nextElementSibling.querySelector('.progress-bar').style.width = `${topReasonPercentage}%`;
             
             // Average amount
             const avgAmount = disputes.reduce((sum, d) => sum + d.deductedAmount, 0) / disputes.length;
-            document.getElementById('avgAmount').textContent = `${avgAmount.toFixed(2)} درهم`;
+            document.getElementById('avgAmount').textContent = `${avgAmount.toFixed(2)} AED`;
             document.querySelector('#avgAmount').nextElementSibling.querySelector('.progress-bar').style.width = `${Math.min(avgAmount / 50 * 100, 100)}%`;
             
             // Success rate
@@ -1301,14 +1301,14 @@ Crispy Chicken - UAE`;
             document.querySelector('#successRate').nextElementSibling.querySelector('.progress-bar').style.width = `${successRate}%`;
             
             // Average response time
-            const repliedDisputes = disputes.filter(d => d.careemReplyDate);
+            const repliedDisputes = disputes.filter(d => d.platformReplyDate);
             const avgResponseTime = repliedDisputes.length > 0 ? 
                 repliedDisputes.reduce((sum, d) => {
-                    const days = Math.floor((new Date(d.careemReplyDate) - new Date(d.submissionDate)) / (1000 * 60 * 60 * 24));
+                    const days = Math.floor((new Date(d.platformReplyDate) - new Date(d.submissionDate)) / (1000 * 60 * 60 * 24));
                     return sum + days;
                 }, 0) / repliedDisputes.length : 0;
             
-            document.getElementById('avgResponseTime').textContent = `${avgResponseTime.toFixed(1)} أيام`;
+            document.getElementById('avgResponseTime').textContent = `${avgResponseTime.toFixed(1)} days`;
             document.querySelector('#avgResponseTime').nextElementSibling.querySelector('.progress-bar').style.width = `${Math.min(avgResponseTime / 7 * 100, 100)}%`;
             
             // Update reason tags
@@ -1336,7 +1336,7 @@ Crispy Chicken - UAE`;
                 const tag = document.createElement('span');
                 tag.className = tagClass;
                 tag.textContent = `${reason} (${count})`;
-                tag.title = `${percentage}% من إجمالي الاعتراضات`;
+                tag.title = `${percentage}% of total disputes`;
                 
                 reasonTagsContainer.appendChild(tag);
             });
@@ -1372,27 +1372,27 @@ Crispy Chicken - UAE`;
                     if (dispute.status === 'Replied') statusClass = 'status-replied';
                     
                     // Status text
-                    let statusText = 'قيد المراجعة';
-                    if (dispute.status === 'Accepted') statusText = 'مقبول';
-                    if (dispute.status === 'Rejected') statusText = 'مرفوض';
-                    if (dispute.status === 'Replied') statusText = 'تم الرد';
+                    let statusText = 'Under Review';
+                    if (dispute.status === 'Accepted') statusText = 'Accepted';
+                    if (dispute.status === 'Rejected') statusText = 'Rejected';
+                    if (dispute.status === 'Replied') statusText = 'Replied';
                     
                     row.innerHTML = `
                         <td><strong>${dispute.orderId}</strong></td>
                         <td>${dispute.branchName}</td>
                         <td>${dispute.area}</td>
                         <td>${dispute.platform}</td>
-                        <td>${dispute.deductedAmount} درهم</td>
+                        <td>${dispute.deductedAmount} AED</td>
                         <td><span class="badge ${statusClass}">${statusText}</span></td>
                         <td>${formatDateTime(dispute.submissionDate)}</td>
                         <td>
-                            <button class="btn btn-sm btn-outline-primary" onclick="viewDispute(${actualIndex})" title="عرض التفاصيل">
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewDispute(${actualIndex})" title="View Details">
                                 <i class="bi bi-eye"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-warning" onclick="openUpdateStatusModal(${actualIndex})" title="تحديث الحالة">
+                            <button class="btn btn-sm btn-outline-warning" onclick="openUpdateStatusModal(${actualIndex})" title="Update Status">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteDispute(${actualIndex})" title="حذف">
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteDispute(${actualIndex})" title="Delete">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
@@ -1404,7 +1404,7 @@ Crispy Chicken - UAE`;
                     dataTable = $('#disputesTable').DataTable({
                         pageLength: 10,
                         language: {
-                            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/ar.json'
+                            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/en.json'
                         },
                         order: [[6, 'desc']] // Sort by date
                     });
@@ -1427,50 +1427,50 @@ Crispy Chicken - UAE`;
             details.innerHTML = `
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>رقم الطلب:</strong> ${dispute.orderId}</p>
-                        <p><strong>معرف الفرع:</strong> ${dispute.branchId}</p>
-                        <p><strong>اسم الفرع:</strong> ${dispute.branchName}</p>
-                        <p><strong>رقم واتساب الفرع:</strong> ${dispute.branchWhatsapp}</p>
-                        <p><strong>المنطقة:</strong> ${dispute.area}</p>
-                        <p><strong>المنصة:</strong> ${dispute.platform}</p>
-                        <p><strong>إجمالي السلة:</strong> ${dispute.basketAmount} درهم</p>
-                        <p><strong>المبلغ المخصوم:</strong> ${dispute.deductedAmount} درهم</p>
+                        <p><strong>Order ID:</strong> ${dispute.orderId}</p>
+                        <p><strong>Branch ID:</strong> ${dispute.branchId}</p>
+                        <p><strong>Branch Name:</strong> ${dispute.branchName}</p>
+                        <p><strong>Branch WhatsApp:</strong> ${dispute.branchWhatsapp}</p>
+                        <p><strong>Area:</strong> ${dispute.area}</p>
+                        <p><strong>Platform:</strong> ${dispute.platform}</p>
+                        <p><strong>Basket Total:</strong> ${dispute.basketAmount} AED</p>
+                        <p><strong>Deducted Amount:</strong> ${dispute.deductedAmount} AED</p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>الحالة:</strong> 
+                        <p><strong>Status:</strong> 
                             <span class="badge ${dispute.status === 'Accepted' ? 'status-accepted' : 
                                 dispute.status === 'Rejected' ? 'status-rejected' : 
                                 dispute.status === 'Replied' ? 'status-replied' : 'status-pending'}">
-                                ${dispute.status === 'Accepted' ? 'مقبول' : 
-                                dispute.status === 'Rejected' ? 'مرفوض' : 
-                                dispute.status === 'Replied' ? 'تم الرد' : 'قيد المراجعة'}
+                                ${dispute.status === 'Accepted' ? 'Accepted' : 
+                                dispute.status === 'Rejected' ? 'Rejected' : 
+                                dispute.status === 'Replied' ? 'Replied' : 'Under Review'}
                             </span>
                         </p>
-                        <p><strong>تاريخ التقديم:</strong> ${formatDateTime(dispute.submissionDate)}</p>
-                        <p><strong>تاريخ الرد:</strong> ${dispute.careemReplyDate ? formatDateTime(dispute.careemReplyDate) : 'لم يتم الرد بعد'}</p>
-                        <p><strong>الأيام منذ الرد:</strong> ${dispute.daysSinceReply || 'N/A'}</p>
+                        <p><strong>Submission Date:</strong> ${dispute.submissionDate ? formatDateTime(dispute.submissionDate) : 'N/A'}</p>
+                        <p><strong>Reply Date:</strong> ${dispute.platformReplyDate ? formatDateTime(dispute.platformReplyDate) : 'Not replied yet'}</p>
+                        <p><strong>Days Since Reply:</strong> ${dispute.daysSinceReply || 'N/A'}</p>
                     </div>
                 </div>
                 <div class="mt-3">
-                    <p><strong>سبب الاعتراض:</strong></p>
+                    <p><strong>Dispute Reason:</strong></p>
                     <div class="alert alert-info">${dispute.disputeReason}</div>
                 </div>
                 ${dispute.evidence ? `
                 <div class="mt-3">
-                    <p><strong>الأدلة:</strong></p>
+                    <p><strong>Evidence:</strong></p>
                     <div class="alert alert-light">${dispute.evidence}</div>
                 </div>
                 ` : ''}
                 ${dispute.additionalNotes ? `
                 <div class="mt-3">
-                    <p><strong>ملاحظات إضافية:</strong></p>
+                    <p><strong>Additional Notes:</strong></p>
                     <div class="alert alert-secondary">${dispute.additionalNotes}</div>
                 </div>
                 ` : ''}
-                ${dispute.careemReplyNotes ? `
+                ${dispute.platformReplyNotes ? `
                 <div class="mt-3">
-                    <p><strong>ملاحظات الرد:</strong></p>
-                    <div class="alert alert-warning">${dispute.careemReplyNotes}</div>
+                    <p><strong>Reply Notes:</strong></p>
+                    <div class="alert alert-warning">${dispute.platformReplyNotes}</div>
                 </div>
                 ` : ''}
             `;
@@ -1486,9 +1486,9 @@ Crispy Chicken - UAE`;
             
             // Set current values
             document.getElementById('newStatus').value = dispute.status;
-            document.getElementById('replyNotes').value = dispute.careemReplyNotes || '';
-            document.getElementById('replyDate').value = dispute.careemReplyDate ? 
-                new Date(dispute.careemReplyDate).toISOString().slice(0, 16) : 
+            document.getElementById('replyNotes').value = dispute.platformReplyNotes || '';
+            document.getElementById('replyDate').value = dispute.platformReplyDate ? 
+                new Date(dispute.platformReplyDate).toISOString().slice(0, 16) : 
                 new Date().toISOString().slice(0, 16);
             
             const modal = new bootstrap.Modal(document.getElementById('updateStatusModal'));
@@ -1505,8 +1505,8 @@ Crispy Chicken - UAE`;
             
             // Update dispute
             disputes[currentDisputeIndex].status = newStatus;
-            disputes[currentDisputeIndex].careemReplyNotes = replyNotes;
-            disputes[currentDisputeIndex].careemReplyDate = replyDate;
+            disputes[currentDisputeIndex].platformReplyNotes = replyNotes;
+            disputes[currentDisputeIndex].platformReplyDate = replyDate;
             
             // Calculate days since reply
             const submissionDate = new Date(disputes[currentDisputeIndex].submissionDate);
@@ -1526,12 +1526,12 @@ Crispy Chicken - UAE`;
             const modal = bootstrap.Modal.getInstance(document.getElementById('updateStatusModal'));
             modal.hide();
             
-            showToast('تم تحديث حالة الاعتراض بنجاح', 'success');
+            showToast('Dispute status updated successfully', 'success');
         }
         
         // Delete dispute
         function deleteDispute(index) {
-            if (confirm('هل أنت متأكد من حذف هذا الاعتراض؟')) {
+            if (confirm('Are you sure you want to delete this dispute?')) {
                 disputes.splice(index, 1);
                 localStorage.setItem('disputes', JSON.stringify(disputes));
                 
@@ -1540,7 +1540,7 @@ Crispy Chicken - UAE`;
                 updateCharts();
                 updateAnalysis();
                 
-                showToast('تم حذف الاعتراض بنجاح', 'success');
+                showToast('Dispute deleted successfully', 'success');
             }
         }
         
@@ -1595,9 +1595,9 @@ Crispy Chicken - UAE`;
             statusChart = new Chart(statusCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['قيد المراجعة', 'مقبول', 'مرفوض', 'تم الرد'],
+                    labels: ['Under Review', 'Accepted', 'Rejected', 'Replied'],
                     datasets: [{
-                        label: 'عدد الاعتراضات',
+                        label: 'Number of Disputes',
                         data: [0, 0, 0, 0],
                         backgroundColor: ['#ffc107', '#28a745', '#dc3545', '#17a2b8'],
                         borderColor: ['#e0a800', '#1e7e34', '#c82333', '#138496'],
@@ -1654,21 +1654,21 @@ Crispy Chicken - UAE`;
                     labels: [],
                     datasets: [
                         {
-                            label: 'إجمالي الاعتراضات',
+                            label: 'Total Disputes',
                             data: [],
                             backgroundColor: 'rgba(211, 47, 47, 0.7)',
                             borderColor: 'rgba(211, 47, 47, 1)',
                             borderWidth: 1
                         },
                         {
-                            label: 'المقبولة',
+                            label: 'Accepted',
                             data: [],
                             backgroundColor: 'rgba(76, 175, 80, 0.7)',
                             borderColor: 'rgba(76, 175, 80, 1)',
                             borderWidth: 1
                         },
                         {
-                            label: 'المرفوضة',
+                            label: 'Rejected',
                             data: [],
                             backgroundColor: 'rgba(244, 67, 54, 0.7)',
                             borderColor: 'rgba(244, 67, 54, 1)',
@@ -1741,7 +1741,7 @@ Crispy Chicken - UAE`;
                 data: {
                     labels: [],
                     datasets: [{
-                        label: 'نسبة النجاح (%)',
+                        label: 'Success Rate (%)',
                         data: [],
                         backgroundColor: [],
                         borderColor: [],
@@ -1767,7 +1767,7 @@ Crispy Chicken - UAE`;
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return `نسبة النجاح: ${context.parsed.x}%`;
+                                    return `Success Rate: ${context.parsed.x}%`;
                                 }
                             }
                         }
@@ -1836,9 +1836,9 @@ Crispy Chicken - UAE`;
                     }
                     
                     // If replied, add response time in days
-                    if (dispute.careemReplyDate) {
+                    if (dispute.platformReplyDate) {
                         const submissionDate = new Date(dispute.submissionDate);
-                        const replyDate = new Date(dispute.careemReplyDate);
+                        const replyDate = new Date(dispute.platformReplyDate);
                         const days = Math.floor((replyDate - submissionDate) / (1000 * 60 * 60 * 24));
                         branchData[dispute.branchName].responseTimes.push(days);
                     }
@@ -1855,16 +1855,16 @@ Crispy Chicken - UAE`;
                 
                 // Performance rating
                 if (data.successRate >= 80) {
-                    data.performance = 'ممتاز';
+                    data.performance = 'Excellent';
                     data.performanceClass = 'performance-excellent';
                 } else if (data.successRate >= 60) {
-                    data.performance = 'جيد';
+                    data.performance = 'Good';
                     data.performanceClass = 'performance-good';
                 } else if (data.successRate >= 40) {
-                    data.performance = 'متوسط';
+                    data.performance = 'Average';
                     data.performanceClass = 'performance-average';
                 } else {
-                    data.performance = 'ضعيف';
+                    data.performance = 'Poor';
                     data.performanceClass = 'performance-poor';
                 }
             });
@@ -1883,8 +1883,8 @@ Crispy Chicken - UAE`;
                     <td>${data.rejected}</td>
                     <td>${data.pending}</td>
                     <td>${data.successRate}%</td>
-                    <td>${data.totalAmount.toFixed(2)} درهم</td>
-                    <td>${data.avgResponseTime} أيام</td>
+                    <td>${data.totalAmount.toFixed(2)} AED</td>
+                    <td>${data.avgResponseTime} days</td>
                     <td>
                         ${data.performance}
                         <span class="performance-indicator ${data.performanceClass}"></span>
@@ -1942,16 +1942,16 @@ Crispy Chicken - UAE`;
                     <h6>${branch}</h6>
                     <div class="row">
                         <div class="col-md-3">
-                            <p><strong>إجمالي الاعتراضات:</strong> ${data.total}</p>
+                            <p><strong>Total Disputes:</strong> ${data.total}</p>
                         </div>
                         <div class="col-md-3">
-                            <p><strong>نسبة النجاح:</strong> ${data.successRate}%</p>
+                            <p><strong>Success Rate:</strong> ${data.successRate}%</p>
                         </div>
                         <div class="col-md-3">
-                            <p><strong>إجمالي المبالغ:</strong> ${data.totalAmount.toFixed(2)} درهم</p>
+                            <p><strong>Total Amount:</strong> ${data.totalAmount.toFixed(2)} AED</p>
                         </div>
                         <div class="col-md-3">
-                            <p><strong>متوسط وقت الرد:</strong> ${data.avgResponseTime} أيام</p>
+                            <p><strong>Avg Response Time:</strong> ${data.avgResponseTime} days</p>
                         </div>
                     </div>
                     <div class="progress mt-2">
@@ -2049,59 +2049,59 @@ Crispy Chicken - UAE`;
             const reportContent = document.getElementById('reportContent');
             
             // Set title
-            const typeText = reportData.type === 'daily' ? 'يومي' : 
-                             reportData.type === 'weekly' ? 'أسبوعي' : 'شهري';
-            reportTitle.textContent = `تقرير ${typeText} (${reportData.dateFrom} - ${reportData.dateTo})`;
+            const typeText = reportData.type === 'daily' ? 'Daily' : 
+                             reportData.type === 'weekly' ? 'Weekly' : 'Monthly';
+            reportTitle.textContent = `${typeText} Report (${reportData.dateFrom} - ${reportData.dateTo})`;
             
             // Build report HTML
             let html = `
                 <div class="report-summary">
-                    <h6>ملخص التقرير</h6>
+                    <h6>Report Summary</h6>
                     <div class="row">
                         <div class="col-md-3">
-                            <p><strong>إجمالي الاعتراضات:</strong> ${reportData.totalDisputes}</p>
+                            <p><strong>Total Disputes:</strong> ${reportData.totalDisputes}</p>
                         </div>
                         <div class="col-md-3">
-                            <p><strong>نسبة النجاح:</strong> ${reportData.successRate}%</p>
+                            <p><strong>Success Rate:</strong> ${reportData.successRate}%</p>
                         </div>
                         <div class="col-md-3">
-                            <p><strong>قيد المراجعة:</strong> ${reportData.statusBreakdown.pending}</p>
+                            <p><strong>Under Review:</strong> ${reportData.statusBreakdown.pending}</p>
                         </div>
                         <div class="col-md-3">
-                            <p><strong>تم الرد:</strong> ${reportData.statusBreakdown.replied}</p>
+                            <p><strong>Replied:</strong> ${reportData.statusBreakdown.replied}</p>
                         </div>
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col-md-6">
-                        <h6>توزيع الحالات</h6>
+                        <h6>Status Breakdown</h6>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th>الحالة</th>
-                                    <th>العدد</th>
-                                    <th>النسبة</th>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                    <th>Percentage</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>قيد المراجعة</td>
+                                    <td>Under Review</td>
                                     <td>${reportData.statusBreakdown.pending}</td>
                                     <td>${(reportData.statusBreakdown.pending / reportData.totalDisputes * 100).toFixed(1)}%</td>
                                 </tr>
                                 <tr>
-                                    <td>مقبول</td>
+                                    <td>Accepted</td>
                                     <td>${reportData.statusBreakdown.accepted}</td>
                                     <td>${(reportData.statusBreakdown.accepted / reportData.totalDisputes * 100).toFixed(1)}%</td>
                                 </tr>
                                 <tr>
-                                    <td>مرفوض</td>
+                                    <td>Rejected</td>
                                     <td>${reportData.statusBreakdown.rejected}</td>
                                     <td>${(reportData.statusBreakdown.rejected / reportData.totalDisputes * 100).toFixed(1)}%</td>
                                 </tr>
                                 <tr>
-                                    <td>تم الرد</td>
+                                    <td>Replied</td>
                                     <td>${reportData.statusBreakdown.replied}</td>
                                     <td>${(reportData.statusBreakdown.replied / reportData.totalDisputes * 100).toFixed(1)}%</td>
                                 </tr>
@@ -2109,12 +2109,12 @@ Crispy Chicken - UAE`;
                         </table>
                     </div>
                     <div class="col-md-6">
-                        <h6>الأسباب الأكثر شيوعاً</h6>
+                        <h6>Top Reasons</h6>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th>السبب</th>
-                                    <th>العدد</th>
+                                    <th>Reason</th>
+                                    <th>Count</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2128,13 +2128,13 @@ Crispy Chicken - UAE`;
                 
                 <div class="row mt-4">
                     <div class="col-md-6">
-                        <h6>توزيع الفروع</h6>
+                        <h6>Branch Distribution</h6>
                         <div class="chart-container" style="height: 300px;">
                             <canvas id="reportBranchChart"></canvas>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <h6>توزيع المنصات</h6>
+                        <h6>Platform Distribution</h6>
                         <div class="chart-container" style="height: 300px;">
                             <canvas id="reportPlatformChart"></canvas>
                         </div>
@@ -2191,7 +2191,7 @@ Crispy Chicken - UAE`;
         }
         
         function exportReport(format) {
-            showToast(`تم تصدير التقرير بنجاح بصيغة ${format.toUpperCase()}`, 'success');
+            showToast(`Report exported successfully in ${format.toUpperCase()}`, 'success');
         }
         
         // Load last reports
@@ -2216,33 +2216,33 @@ Crispy Chicken - UAE`;
             const element = document.getElementById(elementId);
             
             if (!report) {
-                element.innerHTML = '<p class="text-muted">لا توجد تقارير</p>';
+                element.innerHTML = '<p class="text-muted">No reports available</p>';
                 return;
             }
             
-            const typeText = report.type === 'daily' ? 'يومي' : 
-                             report.type === 'weekly' ? 'أسبوعي' : 'شهري';
+            const typeText = report.type === 'daily' ? 'Daily' : 
+                             report.type === 'weekly' ? 'Weekly' : 'Monthly';
             
             element.innerHTML = `
                 <div class="report-summary">
-                    <h6>تقرير ${typeText} (${report.dateFrom} - ${report.dateTo})</h6>
+                    <h6>${typeText} Report (${report.dateFrom} - ${report.dateTo})</h6>
                     <div class="row">
                         <div class="col-6">
-                            <p><strong>إجمالي الاعتراضات:</strong> ${report.data.totalDisputes}</p>
+                            <p><strong>Total Disputes:</strong> ${report.data.totalDisputes}</p>
                         </div>
                         <div class="col-6">
-                            <p><strong>نسبة النجاح:</strong> ${report.data.successRate}%</p>
+                            <p><strong>Success Rate:</strong> ${report.data.successRate}%</p>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <p><strong>مقبول:</strong> ${report.data.statusBreakdown.accepted}</p>
+                            <p><strong>Accepted:</strong> ${report.data.statusBreakdown.accepted}</p>
                         </div>
                         <div class="col-6">
-                            <p><strong>مرفوض:</strong> ${report.data.statusBreakdown.rejected}</p>
+                            <p><strong>Rejected:</strong> ${report.data.statusBreakdown.rejected}</p>
                         </div>
                     </div>
-                    <small class="text-muted">تم إنشاؤه في: ${formatDateTime(report.generatedAt)}</small>
+                    <small class="text-muted">Generated on: ${formatDateTime(report.generatedAt)}</small>
                 </div>
             `;
         }
@@ -2313,10 +2313,10 @@ Crispy Chicken - UAE`;
         
         function exportData(format) {
             // Create CSV content
-            let csv = "Order ID,Branch ID,Branch Name,Branch WhatsApp,Area,Platform,Basket Amount,Deducted Amount,Dispute Reason,Evidence,Status,Submission Date,Careem Reply Date,Careem Reply Notes\n";
+            let csv = "Order ID,Branch ID,Branch Name,Branch WhatsApp,Area,Platform,Basket Amount,Deducted Amount,Dispute Reason,Evidence,Status,Submission Date,Platform Reply Date,Platform Reply Notes\n";
             
             filteredDisputes.forEach(dispute => {
-                csv += `"${dispute.orderId}","${dispute.branchId}","${dispute.branchName}","${dispute.branchWhatsapp}","${dispute.area}","${dispute.platform}",${dispute.basketAmount},${dispute.deductedAmount},"${dispute.disputeReason}","${dispute.evidence}","${dispute.status}","${dispute.submissionDate}","${dispute.careemReplyDate}","${dispute.careemReplyNotes}"\n`;
+                csv += `"${dispute.orderId}","${dispute.branchId}","${dispute.branchName}","${dispute.branchWhatsapp}","${dispute.area}","${dispute.platform}",${dispute.basketAmount},${dispute.deductedAmount},"${dispute.disputeReason}","${dispute.evidence}","${dispute.status}","${dispute.submissionDate}","${dispute.platformReplyDate}","${dispute.platformReplyNotes}"\n`;
             });
             
             // Create download link
@@ -2330,7 +2330,7 @@ Crispy Chicken - UAE`;
             link.click();
             document.body.removeChild(link);
             
-            showToast(`تم تصدير البيانات بنجاح بصيغة ${format.toUpperCase()}`, 'success');
+            showToast(`Data exported successfully in ${format.toUpperCase()}`, 'success');
         }
         
         // Show toast notification
